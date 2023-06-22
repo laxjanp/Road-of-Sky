@@ -30,6 +30,8 @@
 //*****************************************************************************
 static ID3D11ShaderResourceView* g_pTexture;
 static int g_nTimer;
+CNumber TimeNumber;			// ナンバークラス
+
 
 // 初期化
 HRESULT InitTimer(void)
@@ -49,6 +51,7 @@ HRESULT InitTimer(void)
 
 	return hr;
 }
+
 
 //=============================================================================
 // 終了処理
@@ -85,8 +88,7 @@ void DrawTimer()
 	DrawPolygon(pDC);
 
 	// タイマー表示
-	DrawNumber(XMFLOAT2(POS_X_TIMER - 400, POS_Y_TIMER), (unsigned)(g_nTimer / 60), CHRCNT_TIMER);
-
+	TimeNumber.Draw(XMFLOAT2(POS_X_TIMER - 400, POS_Y_TIMER), (unsigned)(g_nTimer / 60), CHRCNT_TIMER);
 }
 
 //=============================================================================

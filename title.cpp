@@ -68,14 +68,9 @@ static LPCWSTR g_pszTexture[] = { L"data/texture/sky_003.jpg",
 								 L"data/texture/press_enter.png" ,
 								 L"data/texture/production.png" };
 static ID3D11ShaderResourceView* g_pTexture[MAX_TEXTURE];
-static int g_nAnimFrame;
-static int g_nFrameCount;
-static int g_nBlink;
-static int g_nStart;
 
-
-//初期化
-HRESULT InitTitle()
+//初期化処理
+HRESULT CTitle::Init()
 {
 	InitEnemy2();
 	HRESULT hr = S_OK;
@@ -92,18 +87,17 @@ HRESULT InitTitle()
 	}
 
 	//変数の初期化
-	g_nBlink = BLINK_TIMER;
-	g_nStart = 0;
-	
+	m_Blink = BLINK_TIMER;
+	m_Start = 0;
+
 	// BGM再生
 	CSound::Play(BGM_000);
 
 	return hr;
 }
 
-
-//終了
-void UninitTitle()
+// 終了処理
+void CTitle::Uninit()
 {
 	// BGM再生停止
 	CSound::Stop(BGM_000);
@@ -116,36 +110,32 @@ void UninitTitle()
 	UninitEnemy2();
 }
 
-
-//更新
-void UpdateTitle()
+// 更新処理
+void CTitle::Update()
 {
 	UpdateEnemy2();
 
 	// 点滅制御
-	--g_nBlink;
-	if (g_nBlink <= 0)
+	--m_Blink;
+	if (m_Blink <= 0)
 	{
-		g_nBlink = (g_nStart) ? BLINK_START_TIMER :
+		m_Blink = (m_Start) ? BLINK_START_TIMER :
 			BLINK_TIMER;
 	}
-
 
 	//ゲームスタート
 	if (GetKeyRelease(VK_RETURN) || GetKeyRelease(VK_SPACE))
 	{
 		CSound::Play(SE_DECIDE);
 		StartFadeOut(SCENE_GAME);
-		g_nStart = 1; // 開始フラグ
-		g_nBlink = BLINK_START_TIMER;
+		m_Start = 1; // 開始フラグ
+		m_Blink = BLINK_START_TIMER;
 		return;
 	}
-
 }
 
-
-//描画
-void DrawTitle()
+// 描画処理
+void CTitle::Draw()
 {
 	//背景の描画
 	ID3D11DeviceContext* pDC = GetDeviceContext();
@@ -153,10 +143,10 @@ void DrawTitle()
 	SetPolygonPos(POS_X_BG, POS_Y_BG);
 	SetPolygonTexture(g_pTexture[TEX_BG]);
 	DrawPolygon(pDC);
-	
+
 	//演出
 	DrawEnemy2();
-	
+
 	//タイトルロゴの描画
 	SetPolygonSize(WIDTH_LOGO, HEIGHT_LOGO);
 	SetPolygonPos(POS_X_LOGO, POS_Y_LOGO);
@@ -168,17 +158,18 @@ void DrawTitle()
 	SetPolygonPos(POS_X_PRODUCTION, POS_Y_PRODUCTION);
 	SetPolygonTexture(g_pTexture[TEX_PRODUCTION]);
 	DrawPolygon(pDC);
-	
-	if (g_nStart)
+
+	// スタートボタンの演出(ついたり消えたりする処理をここで)
+	if (m_Start)
 	{
-		if (g_nBlink < BLINK_START_TIMER / 2)
+		if (m_Blink < BLINK_START_TIMER / 2)
 		{
 			return;
 		}
 	}
 	else
 	{
-		if (g_nBlink < BLINK_TIMER / 2)
+		if (m_Blink < BLINK_TIMER / 2)
 		{
 			return;
 		}
@@ -190,5 +181,4 @@ void DrawTitle()
 	SetPolygonTexture(g_pTexture[TEX_ENTER]);
 	DrawPolygon(pDC);
 
-	
 }

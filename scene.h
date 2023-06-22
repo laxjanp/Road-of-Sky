@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef _SCENE_H_
+#define _SCENE_H_
+
 //=============================================================================
 // シーン用のコード『scene.h』
 // 制作者:松本恵太
@@ -22,10 +25,19 @@ enum EScene
 	MAX_SCENE
 };
 
-// 関数プロトタイプ
-HRESULT InitScene();	//初期化
-void UninitScene();		//終了
-void UpdateScene();		//更新
-void DrawScene();		//描画
+//=============================================================================
+// クラス定義(class)
+//=============================================================================
+class CScene
+{
+public:
+	HRESULT Init();	// 初期化処理
+	void Uninit();	// 終了処理
+	void Update();	// 更新処理
+	void Draw();	// 描画処理
+	void SetScene(EScene eScene);	//画面切り替え
 
-void SetScene(EScene eScene);	//画面切り替え
+};
+
+
+#endif // !_SCENE_H_

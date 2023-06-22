@@ -30,6 +30,7 @@
 static ID3D11ShaderResourceView* g_pTexture;
 static int g_nScore;
 
+CNumber ScoreNumber;		// ナンバークラスの変数
 
 // 初期化
 HRESULT InitScore(void)
@@ -77,7 +78,8 @@ void DrawScore()
 	DrawPolygon(pDC);
 
 	// スコアの表示
-	DrawNumber(XMFLOAT2(POS_X_SCORE, POS_Y_SCORE),(unsigned)g_nScore, CHRCNT_SCORE);
+	ScoreNumber.Draw(XMFLOAT2(POS_X_SCORE, POS_Y_SCORE), (unsigned)g_nScore, CHRCNT_SCORE);
+	//DrawNumber(XMFLOAT2(POS_X_SCORE, POS_Y_SCORE),(unsigned)g_nScore, CHRCNT_SCORE);
 	
 	// 色を元に戻す
 	SetPolygonColor(1.0f, 1.0f, 1.0f);

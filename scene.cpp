@@ -17,8 +17,14 @@
 //*****************************************************************************
 static EScene g_eScene = SCENE_NOME;
 
+// クラスを用意した変数を用意
+CGame game;				// ゲームクラス
+CTitle title;			// タイトルクラス
+CGameover gameover;		// ゲームオーバークラス
+
+
 //初期化
-HRESULT InitScene()
+HRESULT CScene::Init()
 {
 	HRESULT hr = S_OK;
 	SetScene(SCENE_TITLE);	//最初はタイトル画面に
@@ -27,27 +33,27 @@ HRESULT InitScene()
 }
 
 // 終了処理
-void UninitScene()
+void CScene::Uninit()
 {
 	SetScene(SCENE_NOME);	//現在のシーンを終了する処理
 	UninitFade();			//フェードの終了
 }
 
-// 更新
-void UpdateScene()
+// 更新処理
+void CScene::Update()
 {
 	switch (g_eScene)
 	{
 	case SCENE_TITLE:		//タイトル画面の呼び出し
-		UpdateTitle();		//この関数の呼び出しをする
+		title.Update();		//この関数の呼び出しをする
 		break;
-	
+
 	case SCENE_GAME:		//ゲーム画面の呼び出し
-		UpdateGame();
+		game.Update();
 		break;
-	
+
 	case SCENE_GAMEOVER:	//ゲームオーバーの呼び出し
-		UpdateGameOver();
+		gameover.Update();
 		break;
 
 	default:
@@ -56,25 +62,25 @@ void UpdateScene()
 	UpdateFade();			//フェードの更新
 }
 
-// 描画
-void DrawScene()
+// 描画処理
+void CScene::Draw()
 {
 	switch (g_eScene)
 	{
-	
+
 	case SCENE_TITLE:		//タイトル画面の呼び出し
-		DrawTitle();		//この関数の呼び出しをする
+		title.Draw();		//この関数の呼び出しをする
 		break;
 
 	case SCENE_GAME:		//ゲーム画面の呼び出し
-		DrawGame();
+		game.Draw();
 		break;
-	
+
 	case SCENE_GAMEOVER:	//ゲームオーバーの呼び出し
-		DrawGameOver();
+		gameover.Draw();
 		break;
-	
-	
+
+
 	default:
 		break;
 	}
@@ -87,21 +93,21 @@ void DrawScene()
 //引数:シーン切り替えのeScene
 //戻り値:なし
 //=============================================================================
-void SetScene(EScene eScene)
+void CScene::SetScene(EScene eScene)
 {
 	switch (g_eScene)
 	{
 	
 	case SCENE_TITLE:		//タイトル画面の呼び出し
-		UninitTitle();		//この関数の呼び出しをする
+		title.Uninit();		//この関数の呼び出しをする
 		break;
 	
 	case SCENE_GAME:		//ゲーム画面の呼び出し
-		UninitGame();
+		game.Uninit();
 		break;
 	
 	case SCENE_GAMEOVER:	//ゲームオーバーの呼び出し
-		UninitGameOver();
+		gameover.Uninit();
 		break;
 
 	}
@@ -114,15 +120,15 @@ void SetScene(EScene eScene)
 	{
 	
 	case SCENE_TITLE:		//タイトル画面の呼び出し
-		InitTitle();		//この関数の呼び出しをする
+		title.Init();		//この関数の呼び出しをする	
 		break;
 	
 	case SCENE_GAME:		//ゲーム画面の呼び出し
-		InitGame();
+		game.Init();
 		break;
 	
 	case SCENE_GAMEOVER:	//ゲームオーバーの呼び出し
-		InitGameOver();
+		gameover.Init();
 		break;
 	}
 

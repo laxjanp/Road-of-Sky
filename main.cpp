@@ -49,6 +49,9 @@ ID3D11BlendState* g_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
 int g_nCountFPS;								// FPS表示のカウンタ用
 unsigned g_uNumber;								// 数値用のカウンタ用(テスト)
 
+CScene scene;									// シーンクラスで使用する変数
+CNumber number;									// ナンバークラスの変数
+
 //=============================================================================
 // メイン関数
 //=============================================================================
@@ -360,7 +363,8 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	CSound::Init();
 	
 	// 数値表示初期化
-	hr = InitNumber();
+	hr = number.Init();
+	//hr = InitNumber();
 	if (FAILED(hr)) 
 	{
 		MessageBox(g_hWnd, _T("数値表示初期化失敗"), NULL, MB_OK);
@@ -368,7 +372,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	}
 
 	// 画面遷移初期化
-	hr = InitScene();
+	hr = scene.Init();
 	if (FAILED(hr))
 	{
 		MessageBox(g_hWnd, _T("画面遷移初期化失敗"), NULL, MB_OK);
@@ -397,10 +401,11 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 画面遷移終了処理
-	UninitScene();
+	scene.Uninit();
 	
 	// 数値表示終了処理
-	UninitNumber();
+	number.Uninit();
+	//UninitNumber();
 	
 	// サウンド終了処理
 	CSound::Fin();
@@ -494,7 +499,7 @@ void Update(void)
 	UpdateInput();
 	
 	// シーン更新
-	UpdateScene();
+	scene.Update();
 	
 	// サウンド更新
 	CSound::Update();
@@ -511,7 +516,7 @@ void Draw(void)
 	g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
 	
 	// シーン描画
-	DrawScene();
+	scene.Draw();
 	
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

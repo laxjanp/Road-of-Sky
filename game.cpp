@@ -1,6 +1,6 @@
 //=============================================================================
 // ゲーム画画『game.cpp』
-// 制作者:松本恵太
+// 制作者:松本 恵太
 //=============================================================================
 
 //*****************************************************************************
@@ -25,20 +25,16 @@
 #include "life.h"
 #include "pause.h"
 
-//==========================================
-// グローバル変数(g_)
-//==========================================
-static bool g_bPause = false;
+//CTimer GameTimer;
 
-
-//初期化
-HRESULT InitGame()
+// 初期化処理
+HRESULT CGame::Init()
 {
 	HRESULT hr = S_OK;
-	
+
 	// プレイヤー初期化
 	hr = InitPlayer();
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("プレイヤー初期化失敗"), NULL, MB_OK);
 		return hr;
@@ -46,7 +42,7 @@ HRESULT InitGame()
 
 	// 背景初期化
 	hr = InitBG();
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("背景初期化失敗"), NULL, MB_OK);
 		return hr;
@@ -54,7 +50,7 @@ HRESULT InitGame()
 
 	// 弾初期化
 	hr = InitBullet();
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("弾初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
 		return hr;
@@ -92,6 +88,7 @@ HRESULT InitGame()
 
 	// タイマー表示初期化
 	hr = InitTimer();
+	//hr = GameTimer.Init();
 	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("タイマー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
@@ -108,12 +105,14 @@ HRESULT InitGame()
 
 	// 一時停止初期化
 	hr = InitPause();
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("一時停止処理初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
 		return hr;
 	}
-	g_bPause = false;
+
+	// フラグ管理の初期化
+	m_bPause = false;
 
 	// BGM再生
 	CSound::Play(BGM_CYBER41);
@@ -121,9 +120,8 @@ HRESULT InitGame()
 	return hr;
 }
 
-
-//終了
-void UninitGame()
+// 終了処理
+void CGame::Uninit()
 {
 	// BGM再生停止
 	CSound::Stop(BGM_CYBER41);
@@ -133,37 +131,37 @@ void UninitGame()
 
 	// ライフ表示終了処理
 	UninitLife();
-	
+
 	// タイマー終了処理
 	UninitTimer();
-	
+	//GameTimer.Uninit();
+
 	// スコア表示終了処理
 	UninitScore();
-	
+
 	// 敵終了処理
 	UninitEnemy();
 	UninitEnemy2();
 
 	// エフェクト表示終了処理
 	UninitEffect();
-	
+
 	// 弾終了処理
 	UninitBullet();
-	
+
 	// 背景表示終了処理
 	UninitBG();
-	
+
 	// プレイヤー終了処理
 	UninitPlayer();
-
 }
 
 
-//更新
-void UpdateGame()
+// 更新処理
+void CGame::Update()
 {
 	// 一時停止中
-	if (g_bPause)
+	if (m_bPause)
 	{
 		// 一時停止の更新
 		UpdatePause();
@@ -192,24 +190,25 @@ void UpdateGame()
 		UpdateEnemy2();
 
 		// タイマー更新
+		//GameTimer.Update();
 		UpdateTimer();
 	}
 
 	// 一時停止ON/OFF
-	if (GetKeyTrigger(VK_P) || GetKeyTrigger(VK_PAUSE)) 
+	if (GetKeyTrigger(VK_P) || GetKeyTrigger(VK_PAUSE))
 	{
-		
+
 		// フェードイン/アウト中でなければ
 		if (GetFade() == FADE_NONE)
 		{
-			g_bPause = !g_bPause;	// 反転
+			m_bPause = !m_bPause;	// 反転
 
-			if (g_bPause) 
+			if (m_bPause)
 			{
 				CSound::Play(SE_DECIDE);
 				ResetPauseMenu();
 			}
-			else 
+			else
 			{
 				CSound::Play(SE_CANCEL);
 				CSound::Resume();
@@ -218,7 +217,7 @@ void UpdateGame()
 	}
 
 	// 一時停止中(かつフェードイン/アウトしていない)?
-	if (g_bPause && GetFade() == FADE_NONE)
+	if (m_bPause && GetFade() == FADE_NONE)
 	{
 		CSound::Stop(SE_DECIDE);
 		CSound::Stop(SE_SELECT);
@@ -229,7 +228,7 @@ void UpdateGame()
 			switch (GetPauseMenu())
 			{	// 現在の選択項目
 			case PAUSE_MENU_CONTINUE:
-				g_bPause = false;
+				m_bPause = false;
 				CSound::Play(SE_CANCEL);
 				CSound::Resume();
 				break;
@@ -248,9 +247,8 @@ void UpdateGame()
 	}
 }
 
-
-//描画
-void DrawGame()
+// 描画処理
+void CGame::Draw()
 {
 	// 背景描画
 	DrawBG();
@@ -272,15 +270,15 @@ void DrawGame()
 	DrawScore();
 	
 	// タイマー表示
+	//GameTimer.Draw();
 	DrawTimer();
 	
 	// ライフ表示
 	DrawLife();
 
 	// 一時停止描画
-	if (g_bPause) 
+	if (m_bPause) 
 	{
 		DrawPause();
 	}
-
 }

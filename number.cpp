@@ -23,50 +23,47 @@
 static ID3D11ShaderResourceView* g_pTexture;
 
 
-// 初期化s
-HRESULT InitNumber(void)
+// 初期化処理
+HRESULT CNumber::Init()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
-	
+
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_TEXTURE_NUMBER, &g_pTexture);
-	
-	return hr;
 
+	return hr;
 }
 
-// 終了
-void UninitNumber(void)
+// 終了処理
+void CNumber::Uninit()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
 
-//描画
-void DrawNumber(XMFLOAT2 vPos, unsigned uNumber, int nWidth,
-	float fSizeX, float fSizeY)
+// 描画処理
+void CNumber::Draw(XMFLOAT2 vPos, unsigned uNumber, int nWidth,float fSizeX, float fSizeY)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(fSizeX, fSizeY);
 	SetPolygonTexture(g_pTexture);
-	SetPolygonFrameSize(1.0f / COUNT_X_NUMBER,1.0f / COUNT_Y_NUMBER);
-	
+	SetPolygonFrameSize(1.0f / COUNT_X_NUMBER, 1.0f / COUNT_Y_NUMBER);
+
 	vPos.y -= fSizeY * 0.5f;
 	vPos.x += fSizeX * (nWidth - 0.5f);
-	
-	for (; nWidth > 0; --nWidth, vPos.x -= fSizeX) 
+
+	for (; nWidth > 0; --nWidth, vPos.x -= fSizeX)
 	{
 		unsigned n = uNumber % 10;
 		uNumber /= 10;
 		SetPolygonPos(vPos.x, vPos.y);
 		SetPolygonUV((n % COUNT_X_NUMBER) / (float)COUNT_X_NUMBER,
-				(n / COUNT_X_NUMBER) / (float)COUNT_Y_NUMBER);
+			(n / COUNT_X_NUMBER) / (float)COUNT_Y_NUMBER);
 		DrawPolygon(pDC);
 	}
-	
+
 	// 元に戻す
 	SetPolygonUV(0.0f, 0.0f);
 	SetPolygonFrameSize(1.0f, 1.0f);
-
 }

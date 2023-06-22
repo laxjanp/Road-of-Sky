@@ -1,4 +1,6 @@
-#pragma once
+
+#ifndef _NUMBER_H_
+#define _NUMBER_H_
 //=============================================================================
 // ナンバー専用コード『number.h』
 // 制作者:松本恵太
@@ -16,15 +18,19 @@
 #define NUMBER_SIZE_X 35.0f			// 文字列
 #define NUMBER_SIZE_Y 50.0f			// 文字列の高さ
 
-//*****************************************************************************
-// プロトタイプ宣言(関数呼び出し)
-//*****************************************************************************
-HRESULT InitNumber(void);			//初期化
-void UninitNumber(void);			//修了
+// クラス定義(class)
+class CNumber
+{
+public:
+	HRESULT Init();
+	void Uninit();
+	void Draw(XMFLOAT2 vPos,		//表示する位置
+		unsigned uNumber,	//表示する数値
+		int nWidth,			//表示する桁数
+		float fSizeX = NUMBER_SIZE_X,//1文字の幅
+		float fSizeY = NUMBER_SIZE_Y);//1文字の高さ
+private:
+	
+};
 
-//描画
-void DrawNumber(XMFLOAT2 vPos,		//表示する位置
-				unsigned uNumber,	//表示する数値
-				int nWidth,			//表示する桁数
-				float fSizeX = NUMBER_SIZE_X,//1文字の幅
-				float fSizeY = NUMBER_SIZE_Y);//1文字の高さ
+#endif // _NUMBER_H_

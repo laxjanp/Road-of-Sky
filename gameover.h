@@ -1,4 +1,6 @@
-#pragma once
+
+#ifndef _GAMEOVER_H_
+#define _GAMEOVER_H_
 //=============================================================================
 // タイトル画面『gameover.h』
 // 制作者:松本恵太
@@ -9,8 +11,20 @@
 //*****************************************************************************
 #include "main.h"
 
-//関数のプロトタイプ
-HRESULT InitGameOver();		// 初期化
-void UninitGameOver();			// 終了
-void UpdateGameOver();			// 更新
-void DrawGameOver();			// 描画
+// クラス定義(class)
+class CGameover
+{
+public:
+	HRESULT Init();	// 初期化処理
+	void Uninit();	// 終了処理
+	void Update();	// 更新処理
+	void Draw();	// 描画処理
+
+private:
+	int m_Timer;	// タイムカウンター用
+};
+
+
+#endif // !_GAMEOVER_H_
+
+

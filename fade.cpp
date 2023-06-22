@@ -26,6 +26,8 @@ static float g_fAlpha = 1.0f;			//フェードアウトの色(透明部分)
 static EFade g_eFade = FADE_IN;			//今の状態
 static EScene g_eNext = SCENE_TITLE;	//次のシーンへ
 
+CScene set;
+
 // 初期化
 HRESULT InitFade() 
 {
@@ -59,7 +61,7 @@ void UpdateFade()
 			g_eFade = FADE_IN;
 			
 			// シーン切替
-			SetScene(g_eNext);
+			set.SetScene(g_eNext);
 		}
 		
 		// ボリュームもフェードアウト
